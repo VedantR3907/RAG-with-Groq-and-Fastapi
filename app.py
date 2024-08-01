@@ -53,8 +53,7 @@ async def main():
 
 
             chat_history = await read_chat_history()
-            print(chat_history)
-
+            
             display_chat_history(chat_history)
             
             with st.chat_message("HUMAN", avatar='./assets/user.png'):

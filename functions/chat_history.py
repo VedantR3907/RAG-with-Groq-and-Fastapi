@@ -37,7 +37,6 @@ async def format_chat_history(chat_history: List[Dict[str, str]]) -> List[Dict[s
 def load_chat_history() -> List[Dict[str, str]]:
     if os.path.exists(DATABASE_FILE):
         with open(DATABASE_FILE, 'r') as file:
-            print(json.load(file))
             return json.load(file)
     return []
 
