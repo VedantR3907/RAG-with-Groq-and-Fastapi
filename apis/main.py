@@ -24,7 +24,7 @@ async def root():
 @app.post('/groq_api_generator_response')
 async def get_groq_api_response(input: api_response):
     try:
-        chat_history = await read_chat_history()
+        chat_history = await read_chat_history(limit=5)
         format_history = await format_chat_history(chat_history)
 
         response_stream = await get_answer_from_model(input.system_prompt, input.user_prompt, format_history)

@@ -1,9 +1,13 @@
+import asyncio
 import streamlit as st
 import requests
 from streamlit_extras.bottom_container import bottom
 from functions.save_data_to_json import save_to_json
+from functions.chat_history import display_chat_history, read_chat_history
 
 FASTAPI_URL = "http://127.0.0.1:8000/groq_api_generator_response"
+
+
 
 def bottom_container():
     with bottom():
@@ -35,7 +39,7 @@ def generate_answer(user_prompt, system_prompt):
     else:
         st.error(f"Error: {response.status_code}")
 
-def main():
+async def main():
 
     st.header("GROQ API CHATBOT")
 
@@ -46,10 +50,17 @@ def main():
         answer = generate_answer(user_prompt, "you are an helpful assistant.")
 
         with st.container(border=True, height=500):
+
+
+            chat_history = await read_chat_history()
+            print(chat_history)
+
+            display_chat_history(chat_history)
+            
             with st.chat_message("HUMAN", avatar='./assets/user.png'):
                 st.markdown(user_prompt)
                 
             with st.chat_message("AI", avatar='./assets/meta.png'):
                 st.write(answer)
 
-main()
+asyncio.run(main())
