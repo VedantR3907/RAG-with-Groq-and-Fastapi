@@ -1,7 +1,7 @@
 import os
 from groq import AsyncGroq
 from dotenv import load_dotenv
-from typing import AsyncIterable
+from typing import AsyncIterable, List, Dict
 
 
 # Load environment variables
@@ -11,11 +11,13 @@ api_key = os.environ.get("GROQ_API_KEY")
 # Initialize the Groq client with the API key
 client = AsyncGroq(api_key=api_key)
 
-async def get_answer_from_model(system_prompt: str, message: str)-> AsyncIterable[str]:
+async def get_answer_from_model(system_prompt: str, message: str, chat_history: List[Dict[str, str]])-> AsyncIterable[str]:
+
     # Create a chat completion with streaming enabled
+
     chat_completion = await client.chat.completions.create(
         # Required parameters
-        messages=[
+        messages=chat_history +[
             {
                 "role": "system",
                 "content": system_prompt

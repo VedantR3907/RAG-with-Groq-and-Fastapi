@@ -1,0 +1,18 @@
+[
+    {
+        "user": "hi",
+        "assistant": "hello! "
+    },
+    {
+        "user": "write code to add two numbers",
+        "assistant": "def add_numbers(a, b):\n    return a + b "
+    },
+    {
+        "user": "my name is vedant",
+        "assistant": "hello vedant! "
+    },
+    {
+        "user": "what is my name",
+        "assistant": "your name is vedant. "
+    }
+]

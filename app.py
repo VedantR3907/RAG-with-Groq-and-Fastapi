@@ -1,10 +1,9 @@
 import streamlit as st
 import requests
 from streamlit_extras.bottom_container import bottom
-import time
+from functions.save_data_to_json import save_to_json
 
 FASTAPI_URL = "http://127.0.0.1:8000/groq_api_generator_response"
-
 
 def bottom_container():
     with bottom():
@@ -26,8 +25,12 @@ def generate_answer(user_prompt, system_prompt):
     if response.status_code == 200:
         # Process streaming response
         answer = response.text
+        final_response = ''
         for i in answer.split(' '):
-            yield i + " "
+            text = i + " "
+            yield text
+            final_response += text
+        save_to_json(user_prompt, final_response)
 
     else:
         st.error(f"Error: {response.status_code}")

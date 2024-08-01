@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field, validator
 from fastapi.responses import JSONResponse, StreamingResponse
 from functions.groq_api_response import get_answer_from_model
+from functions.chat_history import read_chat_history, format_chat_history
 
 app = FastAPI()
 
@@ -23,7 +24,10 @@ async def root():
 @app.post('/groq_api_generator_response')
 async def get_groq_api_response(input: api_response):
     try:
-        response_stream = await get_answer_from_model(input.system_prompt, input.user_prompt)
+        chat_history = await read_chat_history()
+        format_history = await format_chat_history(chat_history)
+
+        response_stream = await get_answer_from_model(input.system_prompt, input.user_prompt, format_history)
 
         return StreamingResponse(response_stream, media_type="text/plain")
     except Exception as e:
