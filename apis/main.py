@@ -1,7 +1,7 @@
 import sys
 sys.path.append('../')
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel, Field, field_validator, validator
+from pydantic import BaseModel, Field, field_validator
 from fastapi.responses import JSONResponse, StreamingResponse
 from functions.groq_api_response import get_answer_from_model
 from functions.chat_history import read_chat_history, format_chat_history
