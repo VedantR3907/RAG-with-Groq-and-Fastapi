@@ -3,7 +3,7 @@ import sys
 from insert_records import upsert_data
 from delete_records import delete_records
 sys.path.append('../')
-from constants import PINECONE_NAMESPACE, PINECONE_CLIENT, PINECONE_INDEX_NAME
+from constants.constants import PINECONE_NAMESPACE, PINECONE_CLIENT, PINECONE_INDEX_NAME
 from text_and_embeddings.main import Generate_TextAndEmbeddings
 
 index_name = PINECONE_INDEX_NAME

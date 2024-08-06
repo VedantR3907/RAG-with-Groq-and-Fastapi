@@ -2,7 +2,7 @@ import os
 import sys
 import json
 sys.path.append('../')
-from constants import PINECONE_NAMESPACE, PINECONE_CLIENT, PINECONE_INDEX_NAME
+from constants.constants import PINECONE_NAMESPACE, PINECONE_CLIENT, PINECONE_INDEX_NAME
 from text_and_embeddings.main import Generate_TextAndEmbeddings
 from pinecone import ServerlessSpec
 
@@ -22,7 +22,7 @@ def upsert_data(json_path: str, index_name: str) -> None:
     if index_name not in pc.list_indexes().names():
         pc.create_index(
             name=index_name,
-            dimension=512,
+            dimension=384,
             metric="cosine",
             spec=ServerlessSpec(
                 cloud='aws', 

@@ -1,7 +1,11 @@
+import sys
+sys.path.append('../')
 import json
-from langchain_community.embeddings.fastembed import FastEmbedEmbeddings
+from constants.constants import EMBEDDING_MODEL
 
-embeddings = FastEmbedEmbeddings()
+embeddings = EMBEDDING_MODEL
+
+
 
 def generate_embeddings(metadata_path: str) -> None:
     """

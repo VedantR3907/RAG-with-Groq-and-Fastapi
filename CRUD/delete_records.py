@@ -1,6 +1,6 @@
 import sys
 sys.path.append('../')
-from constants import PINECONE_NAMESPACE, PINECONE_CLIENT, PINECONE_INDEX_NAME
+from constants.constants import PINECONE_NAMESPACE, PINECONE_CLIENT, PINECONE_INDEX_NAME
 from text_and_embeddings.textsplitter import filter_filename
 
 
