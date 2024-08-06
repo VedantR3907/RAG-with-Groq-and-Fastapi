@@ -1,5 +1,7 @@
+import sys
+sys.path.append('../')
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator, validator
 from fastapi.responses import JSONResponse, StreamingResponse
 from functions.groq_api_response import get_answer_from_model
 from functions.chat_history import read_chat_history, format_chat_history
@@ -10,7 +12,7 @@ class api_response(BaseModel):
     system_prompt: str = Field(..., min_length=1, description="System prompt cannot be empty and must be a non-null string.")
     user_prompt: str = Field(..., min_length=1, description="User prompt cannot be empty and must be a non-null string.")
     
-    @validator('system_prompt', 'user_prompt')
+    @field_validator('system_prompt', 'user_prompt')
     def check_max_words(cls, value):
         # Check if the string contains fewer than 100 words
         if len(value.split()) >= 100:

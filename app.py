@@ -10,11 +10,8 @@ FASTAPI_URL = "http://127.0.0.1:8000/groq_api_generator_response"
 
 
 def bottom_container():
-    with bottom():
-            
+    with bottom():      
         user_prompt = st.chat_input("Write a question")
-
-
         if user_prompt:
             return user_prompt
 
@@ -40,20 +37,12 @@ def generate_answer(user_prompt, system_prompt):
         st.error(f"Error: {response.status_code}")
 
 async def main():
-
     st.header("GROQ API CHATBOT")
-
     user_prompt = bottom_container()
-
     if user_prompt is not None and user_prompt != '':
-
         answer = generate_answer(user_prompt, "you are an helpful assistant.")
-
         with st.container(border=True, height=500):
-
-
             chat_history = await read_chat_history()
-            
             display_chat_history(chat_history)
             
             with st.chat_message("HUMAN", avatar='./assets/user.png'):
