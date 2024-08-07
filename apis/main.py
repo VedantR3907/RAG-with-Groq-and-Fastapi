@@ -2,7 +2,7 @@ import sys
 sys.path.append('../')
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field, field_validator
-from fastapi.responses import JSONResponse, StreamingResponse
+from fastapi.responses import JSONResponse, StreamingResponse  # noqa: F401
 from functions.chat_history import read_chat_history, format_chat_history_llamaindex
 from query_database.main import llamaindex_chatbot
 from apis.routers import crud_router, loader_router
@@ -46,3 +46,5 @@ async def get_groq_api_response_llamaindex(input: InputModel):
         return JSONResponse(response_stream, status_code=200)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
