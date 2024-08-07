@@ -4,14 +4,14 @@ import fitz
 
 async def process_page(doc: fitz.Document, page_num: int) -> str:
     """
-    Process a single page of the PDF to extract text and replace images with their descriptions.
+    Process a single page of the PDF to extract text.
 
     Args:
         doc (fitz.Document): The PDF document object.
         page_num (int): The page number to be processed.
 
     Returns:
-        str: The modified text of the page with image descriptions included.
+        str: The extracted text of the page.
 
     Raises:
         RuntimeError: If there is an error during the page processing.
@@ -23,7 +23,6 @@ async def process_page(doc: fitz.Document, page_num: int) -> str:
 
     except (ValueError, TypeError, AttributeError, IndexError) as e:
         raise RuntimeError(f"Error processing page {page_num + 1}: {e}") from e
-
 
 async def process_pdf(pdf_path: str, output_dir: str) -> str:
     """
@@ -46,7 +45,7 @@ async def process_pdf(pdf_path: str, output_dir: str) -> str:
 
         # Process pages in batches to manage async tasks efficiently
         for i in range(0, len(tasks), 5):
-            batch = tasks[i: i + 5]
+            batch = tasks[i:i + 5]
             page_texts = await asyncio.gather(*batch)
             modified_content.extend(page_texts)
 
@@ -87,7 +86,7 @@ async def process_directory(input_dir: str, output_dir: str):
 
     print(f"Processed {len(output_paths)} PDFs. Output files are located in '{output_dir}'.")
 
-def pdfLoader(input_dir: str, output_dir: str):
+async def pdfLoader(input_dir: str, output_dir: str):
     """
     Run the PDF processing for all files in the input directory.
 
@@ -95,11 +94,10 @@ def pdfLoader(input_dir: str, output_dir: str):
         input_dir (str): The directory containing PDF files to process.
         output_dir (str): The directory to save the output text files.
     """
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(process_directory(input_dir, output_dir))
+    await process_directory(input_dir, output_dir)
 
 if __name__ == "__main__":
     # Replace with the path to your directory containing PDF files
     input_dir = '../documents'
     output_dir = '../extracted_output'
-    pdfLoader(input_dir, output_dir)
+    asyncio.run(pdfLoader(input_dir, output_dir))

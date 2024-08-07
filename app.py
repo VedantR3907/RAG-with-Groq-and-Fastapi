@@ -8,6 +8,20 @@ from functions.chat_history import display_chat_history, read_chat_history
 FASTAPI_URL = "http://127.0.0.1:8000/groq_api_generator_response_llamaindex"
 
 
+def sidebar():
+
+    st.sidebar.subheader("File Uploads")
+    uploaded_files = st.sidebar.file_uploader("Choose files", accept_multiple_files=True)
+    if st.sidebar.button("Load Files"):
+        if uploaded_files:
+            for uploaded_file in uploaded_files:
+                # Display file name
+                st.sidebar.write(f"File name: {uploaded_file.name}")
+                # Process file here (e.g., save to disk, read content, etc.)
+                file_content = uploaded_file.read().decode('utf-8')
+                st.sidebar.write(file_content[:1000])  # Show first 1000 characters
+        else:
+            st.sidebar.write("No files uploaded.")
 
 def bottom_container():
     with bottom():      
@@ -42,6 +56,7 @@ def generate_answer(user_prompt):
 
 async def main():
     st.header("GROQ API CHATBOT")
+    sidebar()
     user_prompt = bottom_container()
     if user_prompt is not None and user_prompt != '':
         answer = generate_answer(user_prompt)

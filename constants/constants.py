@@ -14,3 +14,6 @@ EMBEDDING_MODEL = FastEmbedEmbeddings()
 
 SIMILARITY_TOP_K = 10
 SIMILARITY_CUTOFF = 0.0
+
+FILES_INPUT_DIR = 'E:\Codes\Data Sciene\AI\RAG-with-Groq-and-Fastapi\documents'
+FILES_OUTPUT_DIR = 'E:\Codes\Data Sciene\AI\RAG-with-Groq-and-Fastapi\extracted_output'

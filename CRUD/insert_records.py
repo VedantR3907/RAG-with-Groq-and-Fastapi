@@ -1,6 +1,7 @@
 import os
 import sys
 import json
+import aiofiles
 sys.path.append('../')
 from constants.constants import PINECONE_NAMESPACE, PINECONE_CLIENT, PINECONE_INDEX_NAME
 from text_and_embeddings.main import Generate_TextAndEmbeddings
@@ -10,34 +11,36 @@ index_name = PINECONE_INDEX_NAME
 pc = PINECONE_CLIENT
 namespace = PINECONE_NAMESPACE
 
-def upsert_data(json_path: str, index_name: str) -> None:
+async def upsert_data(json_path: str, index_name: str, namespace: str) -> None:
     """
-    Upserts data into a Pinecone index and removes these records from the metadata file.
+    Asynchronously upserts data into a Pinecone index and removes these records from the metadata file.
 
     Args:
         json_path (str): The path to the JSON file containing the embeddings.
         index_name (str): The name of the Pinecone index.
+        namespace (str): The namespace for the Pinecone index.
     """
 
-    if index_name not in pc.list_indexes().names():
-        pc.create_index(
+    # Initialize Pinecone client
+    if index_name not in await pc.list_indexes():
+        await pc.create_index(
             name=index_name,
             dimension=384,
             metric="cosine",
             spec=ServerlessSpec(
-                cloud='aws', 
+                cloud='aws',
                 region='us-east-1'
             )
         )
-
         print("INDEX CREATED SUCCESSFULLY")
     else:
         print("INDEX ALREADY EXISTS")
+    
     index = pc.Index(index_name)
     
-    # Load the data from JSON
-    with open(json_path, 'r', encoding='utf-8') as file:
-        data = json.load(file)
+    # Asynchronously load the data from JSON
+    async with aiofiles.open(json_path, 'r', encoding='utf-8') as file:
+        data = json.loads(await file.read())
     
     # Prepare vectors for upsertion
     vectors = [
@@ -59,16 +62,16 @@ def upsert_data(json_path: str, index_name: str) -> None:
     # Extract IDs for the records to be upserted
     ids_to_upsert = [entry["id"] for entry in data]
     
-    # Upsert vectors into Pinecone
-    index.upsert(vectors=vectors, namespace=namespace)
+    # Asynchronously upsert vectors into Pinecone
+    await index.upsert(vectors=vectors, namespace=namespace)
     print(f"Data has been upserted into the Pinecone index '{index_name}'.")
-
+    
     # Remove records from metadata that were upserted
     updated_metadata = [entry for entry in data if entry["id"] not in ids_to_upsert]
     
-    # Write the updated metadata back to the JSON file
-    with open(json_path, 'w', encoding='utf-8') as file:
-        json.dump(updated_metadata, file, indent=4)
+    # Asynchronously write the updated metadata back to the JSON file
+    async with aiofiles.open(json_path, 'w', encoding='utf-8') as file:
+        await file.write(json.dumps(updated_metadata, indent=4))
     
     print("Records that were upserted have been removed from the metadata file.")
 

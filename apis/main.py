@@ -5,8 +5,13 @@ from pydantic import BaseModel, Field, field_validator
 from fastapi.responses import JSONResponse, StreamingResponse
 from functions.chat_history import read_chat_history, format_chat_history_llamaindex
 from query_database.main import llamaindex_chatbot
+from apis.routers import crud_router, loader_router
+
 
 app = FastAPI()
+
+app.include_router(crud_router.router)
+app.include_router(loader_router.router)
 
 class api_response(BaseModel):
     system_prompt: str = Field(..., min_length=1, description="System prompt cannot be empty and must be a non-null string.")
