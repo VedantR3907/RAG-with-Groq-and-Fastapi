@@ -5,7 +5,7 @@ from streamlit_extras.bottom_container import bottom
 from functions.save_data_to_json import save_to_json
 from functions.chat_history import display_chat_history, read_chat_history
 
-FASTAPI_URL = "http://127.0.0.1:8000/groq_api_generator_response"
+FASTAPI_URL = "http://127.0.0.1:8000/groq_api_generator_response_llamaindex"
 
 
 
@@ -16,21 +16,25 @@ def bottom_container():
             return user_prompt
 
 
-def generate_answer(user_prompt, system_prompt):
+def generate_answer(user_prompt):
     response = requests.post(
         FASTAPI_URL,
-        json={"system_prompt": system_prompt, "user_prompt": user_prompt},
-        stream=True
+        json={"input": user_prompt},
     )
 
     if response.status_code == 200:
         # Process streaming response
-        answer = response.text
+        answer = response.text  # Remove extra whitespace/newlines
+        if answer.startswith('"') and answer.endswith('"'):
+            answer = answer[1:-1]  # Remove the leading and trailing quotes
+
+        answer = answer.replace('\\n', '\n')
         final_response = ''
         for i in answer.split(' '):
             text = i + " "
             yield text
             final_response += text
+        
         save_to_json(user_prompt, final_response)
 
     else:
@@ -40,7 +44,7 @@ async def main():
     st.header("GROQ API CHATBOT")
     user_prompt = bottom_container()
     if user_prompt is not None and user_prompt != '':
-        answer = generate_answer(user_prompt, "you are an helpful assistant.")
+        answer = generate_answer(user_prompt)
         with st.container(border=True, height=500):
             chat_history = await read_chat_history()
             display_chat_history(chat_history)
