@@ -9,12 +9,13 @@ base_path = os.path.dirname(os.path.dirname(__file__))
 extracted_output_path = os.path.join(base_path, 'extracted_output')
 documents_folder = os.path.join(base_path, 'documents')
 
-# Create the folders if they do not exist
-os.makedirs(extracted_output_path, exist_ok=True)
-os.makedirs(documents_folder, exist_ok=True)
-
 async def process_and_save_files(files: List[UploadFile]):
     saved_text_files = []
+
+    # Create the folders if they do not exist
+    os.makedirs(extracted_output_path, exist_ok=True)
+    os.makedirs(documents_folder, exist_ok=True)
+
     
     for file in files:
         # Save the uploaded file to the documents folder

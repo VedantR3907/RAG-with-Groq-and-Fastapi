@@ -1,8 +1,6 @@
-import asyncio
-from pydantic import BaseModel
 from fastapi.responses import JSONResponse
-from fastapi import APIRouter, HTTPException, BackgroundTasks
-from CRUD import insert_records
+from fastapi import APIRouter, HTTPException
+from CRUD.insert_records import upsert_data
 
 router = APIRouter(
     prefix="/crud",
@@ -15,19 +13,11 @@ router = APIRouter(
 )  
 
 
-class UpsertDataRequest(BaseModel):
-    json_path: str
-    index_name: str
-    namespace: str
 
-@router.post("/insert-documents", response_model=UpsertDataRequest)
-async def InsertDocuments(docs: UpsertDataRequest, background_task: BackgroundTasks):
+@router.post("/insert-documents")
+async def InsertDocuments():
     try:
-        # Add the task to background
-        background_task.add_task(
-            asyncio.run,
-            insert_records(docs.json_path, docs.index_name, docs.namespace)
-        )
-        return JSONResponse(status_code=200, content = "Document upserted successfully. (it can take time to show it in pinecone database)")
+        await upsert_data()
+        return JSONResponse(status_code=200, content = "Document upserted successfully.")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

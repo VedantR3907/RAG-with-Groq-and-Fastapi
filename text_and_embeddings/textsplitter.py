@@ -1,9 +1,10 @@
 import re
 import os
 import json
+import aiofiles
+import asyncio
 from typing import Dict, Any
 from datetime import datetime
-
 
 def filter_filename(filename: str, id: bool) -> str:
     """
@@ -37,7 +38,7 @@ def filter_filename(filename: str, id: bool) -> str:
     
     return filtered_filename
 
-def ReadFiles(folder_path: str) -> Dict[str, Dict[str, str]]:
+async def ReadFiles(folder_path: str) -> Dict[str, Dict[str, str]]:
     """
     Reads all text files in the specified folder and returns their contents along with metadata.
 
@@ -60,8 +61,8 @@ def ReadFiles(folder_path: str) -> Dict[str, Dict[str, str]]:
             last_modified_date = datetime.fromtimestamp(os.path.getmtime(file_path_full)).strftime('%Y-%m-%d')
             file_size = os.path.getsize(file_path_full)
             
-            with open(file_path_full, 'r', encoding='utf-8') as file:
-                content = file.read()
+            async with aiofiles.open(file_path_full, 'r', encoding='utf-8') as file:
+                content = await file.read()
                 
             file_contents[filename] = {
                 'content': content,
@@ -72,7 +73,7 @@ def ReadFiles(folder_path: str) -> Dict[str, Dict[str, str]]:
             }
     return file_contents
 
-def TextSplitter(file_contents: Dict[str, Dict[str, str]], chunk_size: int = 512) -> Dict[str, Dict[str, str]]:
+async def TextSplitter(file_contents: Dict[str, Dict[str, str]], chunk_size: int = 512) -> Dict[str, Dict[str, str]]:
     """
     Splits the text content of each file into smaller chunks and creates metadata for the split chunks.
 
@@ -116,7 +117,7 @@ def TextSplitter(file_contents: Dict[str, Dict[str, str]], chunk_size: int = 512
     
     return metadata
 
-def WriteMetadataToJson(metadata: Dict[str, Dict[str, Any]], output_path: str) -> None:
+async def WriteMetadataToJson(metadata: Dict[str, Dict[str, Any]], output_path: str) -> None:
     """
     Writes the metadata to a JSON file with a new structure.
 
@@ -141,15 +142,15 @@ def WriteMetadataToJson(metadata: Dict[str, Dict[str, Any]], output_path: str) -
         })
     
     # Write the reformatted data to the JSON file
-    with open(output_path, 'w', encoding='utf-8') as json_file:
-        json.dump(reformatted_data, json_file, ensure_ascii=False, indent=4)
+    async with aiofiles.open(output_path, 'w', encoding='utf-8') as json_file:
+        await json_file.write(json.dumps(reformatted_data, ensure_ascii=False, indent=4))
 
-def process_metadata(directory_path: str) -> None:
+async def process_metadata(directory_path: str) -> None:
     """
     Processes files in the specified directory to create metadata and write it to a JSON file.
 
     Args:
-        base_path (str): The path to the directory containing files to process.
+        directory_path (str): The path to the directory containing files to process.
     """
     # Construct the path to the extracted_output folder in the specified base path
     extracted_output_path = directory_path
@@ -159,20 +160,23 @@ def process_metadata(directory_path: str) -> None:
         print(f"Processing files in the directory: {extracted_output_path}")
         
         # Read all files in the extracted_output folder
-        file_contents = ReadFiles(extracted_output_path)
+        file_contents = await ReadFiles(extracted_output_path)
 
         # Split the text and create metadata
-        metadata = TextSplitter(file_contents)
+        metadata = await TextSplitter(file_contents)
 
         # Define the path for the JSON output file
         json_output_path = os.path.join(extracted_output_path, 'metadata.json')
 
         # Write the metadata to the JSON file
-        WriteMetadataToJson(metadata, json_output_path)
+        await WriteMetadataToJson(metadata, json_output_path)
 
         print(f"Metadata has been written to {json_output_path}.")
     else:
         print(f"The path {extracted_output_path} is not a valid directory.")
     
 if __name__ == "__main__":
-    process_metadata('../extracted_output')
+    # Run the async process_metadata function
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    extracted_output_path = os.path.join(current_dir, 'extracted_output')
+    asyncio.run(process_metadata(extracted_output_path))

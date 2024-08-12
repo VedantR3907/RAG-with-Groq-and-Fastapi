@@ -2,6 +2,7 @@ import os
 import sys
 import json
 import aiofiles
+import asyncio
 sys.path.append('../')
 from constants.constants import PINECONE_NAMESPACE, PINECONE_CLIENT, PINECONE_INDEX_NAME
 from text_and_embeddings.main import Generate_TextAndEmbeddings
@@ -11,7 +12,11 @@ index_name = PINECONE_INDEX_NAME
 pc = PINECONE_CLIENT
 namespace = PINECONE_NAMESPACE
 
-async def upsert_data(json_path: str, index_name: str, namespace: str) -> None:
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+json_path = os.path.join(parent_dir, 'extracted_output', 'metadata.json')
+
+async def upsert_data() -> None:
     """
     Asynchronously upserts data into a Pinecone index and removes these records from the metadata file.
 
@@ -21,8 +26,10 @@ async def upsert_data(json_path: str, index_name: str, namespace: str) -> None:
         namespace (str): The namespace for the Pinecone index.
     """
 
+    await Generate_TextAndEmbeddings(os.path.join(parent_dir, 'extracted_output'), json_path)
+
     # Initialize Pinecone client
-    if index_name not in await pc.list_indexes():
+    if index_name not in pc.list_indexes().names():
         await pc.create_index(
             name=index_name,
             dimension=384,
@@ -63,7 +70,7 @@ async def upsert_data(json_path: str, index_name: str, namespace: str) -> None:
     ids_to_upsert = [entry["id"] for entry in data]
     
     # Asynchronously upsert vectors into Pinecone
-    await index.upsert(vectors=vectors, namespace=namespace)
+    index.upsert(vectors=vectors, namespace=namespace)
     print(f"Data has been upserted into the Pinecone index '{index_name}'.")
     
     # Remove records from metadata that were upserted
@@ -75,12 +82,11 @@ async def upsert_data(json_path: str, index_name: str, namespace: str) -> None:
     
     print("Records that were upserted have been removed from the metadata file.")
 
-if __name__ == "__main__":
-    # Define paths and credentials
-    metadata_json_path = '../extracted_output/metadata.json'
-    directory_path = os.path.dirname(metadata_json_path)
 
-    Generate_TextAndEmbeddings(directory_path, metadata_json_path)
-
+async def main() -> None:
+    
     # Upsert data
-    upsert_data(metadata_json_path, index_name)
+    await upsert_data()
+
+if __name__ == "__main__":
+    asyncio.run(main())
