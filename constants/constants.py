@@ -17,3 +17,6 @@ SIMILARITY_CUTOFF = 0.0
 
 FILES_INPUT_DIR = 'E:\Codes\Data Sciene\AI\RAG-with-Groq-and-Fastapi\documents'
 FILES_OUTPUT_DIR = 'E:\Codes\Data Sciene\AI\RAG-with-Groq-and-Fastapi\extracted_output'
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+DIRECTORY_PATH = os.path.dirname(current_dir)

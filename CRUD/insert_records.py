@@ -4,7 +4,7 @@ import json
 import aiofiles
 import asyncio
 sys.path.append('../')
-from constants.constants import PINECONE_NAMESPACE, PINECONE_CLIENT, PINECONE_INDEX_NAME
+from constants.constants import DIRECTORY_PATH, PINECONE_NAMESPACE, PINECONE_CLIENT, PINECONE_INDEX_NAME
 from text_and_embeddings.main import Generate_TextAndEmbeddings
 from pinecone import ServerlessSpec
 
@@ -12,9 +12,8 @@ index_name = PINECONE_INDEX_NAME
 pc = PINECONE_CLIENT
 namespace = PINECONE_NAMESPACE
 
-current_dir = os.path.dirname(os.path.abspath(__file__))
-parent_dir = os.path.dirname(current_dir)
-json_path = os.path.join(parent_dir, 'extracted_output', 'metadata.json')
+
+json_path = os.path.join(DIRECTORY_PATH, 'extracted_output', 'metadata.json')
 
 async def upsert_data() -> None:
     """
@@ -26,7 +25,7 @@ async def upsert_data() -> None:
         namespace (str): The namespace for the Pinecone index.
     """
 
-    await Generate_TextAndEmbeddings(os.path.join(parent_dir, 'extracted_output'), json_path)
+    await Generate_TextAndEmbeddings(os.path.join(DIRECTORY_PATH, 'extracted_output'), json_path)
 
     # Initialize Pinecone client
     if index_name not in pc.list_indexes().names():

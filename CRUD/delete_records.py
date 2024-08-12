@@ -1,5 +1,7 @@
 import sys
+import asyncio
 sys.path.append('../')
+from typing import List
 from constants.constants import PINECONE_NAMESPACE, PINECONE_CLIENT, PINECONE_INDEX_NAME
 from text_and_embeddings.textsplitter import filter_filename
 
@@ -9,15 +11,16 @@ pc = PINECONE_CLIENT,
 pc = pc[0]
 namespace = PINECONE_NAMESPACE
 
-def delete_records(file_names: list, id: bool = False, deleteall: bool = False) -> None:
+async def delete_records(file_names: List[str], id: bool = False, deleteall: bool = False) -> None:
     """
-    Deletes all records associated with the given list of file names from Pinecone.
+    Asynchronously deletes all records associated with the given list of file names from Pinecone.
 
     Args:
-        file_names (list): List of file names whose chunks should be deleted.
+        file_names (List[str]): List of file names whose chunks should be deleted.
         id (bool): If True, keep special characters in filenames; otherwise, remove them.
         deleteall (bool): If True, delete all records in the namespace.
     """
+    # Initialize Pinecone index
     index = pc.Index(index_name)
 
     if deleteall:
@@ -27,8 +30,8 @@ def delete_records(file_names: list, id: bool = False, deleteall: bool = False) 
         return
     
     # Extract existing IDs from Pinecone
-    existing_ids = list(index.list(namespace=namespace))[0]  # Ensure this is a list
-    # Create a set of IDs to delete based on formatted file names
+    existing_ids = list(index.list(namespace=namespace))[0]
+
     ids_to_delete = set()
     
     for file_name in file_names:
@@ -45,8 +48,12 @@ def delete_records(file_names: list, id: bool = False, deleteall: bool = False) 
 
 # Example usage
 if __name__ == "__main__":
-    # Define paths and keys
-    file_names_to_delete = ['abc.txt']
+    async def main():
+        # Define paths and keys
+        file_names_to_delete = ['Vedant Rajpurohit Resume new.txt']
+        
+        # Delete records for the specified files
+        await delete_records(file_names_to_delete, id=False, deleteall=False)
     
-    # Delete records for the specified files
-    delete_records(file_names_to_delete, id=False, deleteall=False)
+    # Run the async main function
+    asyncio.run(main())
