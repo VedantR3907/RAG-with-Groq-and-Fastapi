@@ -20,3 +20,6 @@ FILES_OUTPUT_DIR = 'E:\Codes\Data Sciene\AI\RAG-with-Groq-and-Fastapi\extracted_
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 DIRECTORY_PATH = os.path.dirname(current_dir)
+
+
+FASTAPI_URL = "http://127.0.0.1:8000"
