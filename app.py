@@ -112,7 +112,7 @@ def sidebar():
                 ]
                 
                 selected_files = st.sidebar.multiselect(
-                    "Select files to delete", 
+                    "Select files to delete.", 
                     options=files_display_names
                 )
                 
