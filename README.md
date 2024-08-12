@@ -1,2 +1,2 @@
 # GroqSimpleChatBot
-This is a simple groq only chatboy
+This is a simple groq only chatboy.
