@@ -1,6 +1,5 @@
 import os
 import sys
-import asyncio
 import PIL.Image
 import google.generativeai as genai
 sys.path.append('../')
