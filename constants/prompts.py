@@ -25,3 +25,17 @@ By following these guidelines, you will ensure that all responses are accurate a
 In this prompt, only answer questions relevant to the documents. Don't answer questions like "My name is Vedant, what is your name?" And never generate code if not specified in documents.
 
 '''
+
+IMAGE_DESCRIPTION_PROMPT = '''Whenever images are uploaded, analyze each image thoroughly and provide a comprehensive, detailed description. Your response should include all visible elements, such as characters, objects, text, numbers, colors, and any significant background details. Focus on identifying key aspects like player names, scores, icons, and interface elements if applicable. Describe any relevant actions, roles, or statuses of the subjects in the image, and clearly mention any text or numbers present.
+
+If multiple images are provided or if only a single image is provided, always use a numbering system for the description of each image. Write the descriptions as follows:
+
+1. **Description of the first image.**
+2. **Description of the second image.**
+3. **Description of the third image.**
+...and so on.
+
+Ensure that each description is organized, covering the most important information first, while also including minor details that contribute to a full understanding of the image.
+
+Even if only one image is provided, it should still be described as item 1.
+'''

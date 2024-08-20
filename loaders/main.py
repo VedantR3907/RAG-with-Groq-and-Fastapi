@@ -5,6 +5,7 @@ import sys
 sys.path.append('../')
 from loaders.llamaparse_loader import llamaparser
 from loaders.pdf_loader import pdfLoader
+from loaders.image_loader import generate_descriptions_for_images
 from typing import List
 from fastapi import UploadFile
 from constants.constants import FILES_INPUT_DIR, FILES_OUTPUT_DIR
@@ -55,11 +56,16 @@ async def process_files():
         files = os.listdir(input_dir)
         pdf_files = [f for f in files if f.lower().endswith('.pdf')]
         text_files = [f for f in files if f.lower().endswith('.txt') or f.lower().endswith('.doc')]
+        image_files = [f for f in files if f.lower().endswith('.png') or f.lower().endswith('.jpeg')]
 
         # Create a list of tasks for processing
         tasks = []
 
         # Process PDF files
+        if image_files:
+            print("Processing image files...")
+            tasks.append(generate_descriptions_for_images(input_dir, output_dir))
+            
         if pdf_files:
             print("Processing PDF files...")
             tasks.append(pdfLoader(input_dir=input_dir, output_dir=output_dir))
@@ -68,7 +74,7 @@ async def process_files():
         if text_files:
             print("Processing text and doc files...")
             tasks.append(llamaparser(input_dir=input_dir, output_dir=output_dir))
-
+        
         # Await all tasks
         await asyncio.gather(*tasks)
 
