@@ -33,6 +33,26 @@ def loading_files(files: List[Tuple[str, Tuple[str, IO, str]]]):
         print(f"An error occurred: {e}")
         return None
     
+def load_files_with_images(files: List[Tuple[str, Tuple[str, IO, str]]]):
+    """
+    Uploads files to the specified API endpoint.
+
+    :param files: A list of tuples where each tuple contains (filename, file object, MIME type).
+    :param api_url: The URL of the API endpoint to which the files should be uploaded.
+    :return: The response object from the API request.
+    """
+
+    API = f"{FASTAPI_URL}/loader/loading-files/"
+    try:
+        # Send the POST request with files
+        response = requests.post(API, files=files)
+        
+        # Return the response object
+        return response
+    except requests.RequestException as e:
+        print(f"An error occurred: {e}")
+        return None
+    
 def insert_documents_to_database():
     """
     Inserts the uploaded documents into the database by calling the specified API endpoint.

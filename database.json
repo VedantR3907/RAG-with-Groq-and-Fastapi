@@ -1,2 +1,50 @@
 [
+    {
+        "user": "Hi",
+        "assistant": "The information you requested is not available in the provided documents. "
+    },
+    {
+        "user": "What documents are uploaded",
+        "assistant": "The information you requested is not available in the provided documents. "
+    },
+    {
+        "user": "How many kills did cyoher had",
+        "assistant": "The information you requested is not available in the provided documents. "
+    },
+    {
+        "user": "cypher*",
+        "assistant": "The information you requested is not available in the provided documents. "
+    },
+    {
+        "user": "Who is Vedant",
+        "assistant": "Vedant is the name of the player controlling the agent Reyna in the Valorant match. "
+    },
+    {
+        "user": "How many kills did cypher had",
+        "assistant": "The information you requested is not available in the provided documents. "
+    },
+    {
+        "user": "what is the kill tally of all players",
+        "assistant": "The information you requested is not available in the provided documents. "
+    },
+    {
+        "user": "What is KDA",
+        "assistant": "KDA stands for Kills/Deaths/Assists, which is a measure of a player's performance in the game. "
+    },
+    {
+        "user": "Which agents are shown",
+        "assistant": "The agents shown in the image are Cypher, Brimstone, Reyna, Jett, and Skye. "
+    },
+    {
+        "user": "Who is Vedan",
+        "assistant": "Vedant is the name of the player controlling the agent Reyna in the Valorant match. "
+    },
+    {
+        "user": "Is there any other information related to vedant",
+        "assistant": "Vedant is the name of the player controlling the agent Reyna in the Valorant match. He is also mentioned in the context of his professional experience as a Junior AI Engineer at Dhiwse Pvt Ltd. "
+    },
+    {
+        "user": "What is the score of the game",
+        "assistant": "The score of the game is 15 - 15, indicating a draw. "
+    }
 ]
