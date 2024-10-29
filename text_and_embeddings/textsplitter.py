@@ -5,6 +5,7 @@ import aiofiles
 import asyncio
 from typing import Dict, Any
 from datetime import datetime
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 def filter_filename(filename: str, id: bool) -> str:
     """
@@ -73,9 +74,10 @@ async def ReadFiles(folder_path: str) -> Dict[str, Dict[str, str]]:
             }
     return file_contents
 
-async def TextSplitter(file_contents: Dict[str, Dict[str, str]], chunk_size: int = 512) -> Dict[str, Dict[str, str]]:
+async def TextSplitter(file_contents: Dict[str, Dict[str, str]], chunk_size: int = 1500, chunk_overlap: int = 100) -> Dict[str, Dict[str, str]]:
     """
-    Splits the text content of each file into smaller chunks and creates metadata for the split chunks.
+    Splits the text content of each file into smaller chunks using RecursiveCharacterTextSplitter 
+    and creates metadata for the split chunks.
 
     Args:
         file_contents (Dict[str, Dict[str, str]]): A dictionary where keys are file names and values are dictionaries containing:
@@ -84,7 +86,8 @@ async def TextSplitter(file_contents: Dict[str, Dict[str, str]], chunk_size: int
             - 'last_modified_date': The file last modified date as a string.
             - 'file_path': The full path to the file.
             - 'file_size': The file size in bytes.
-        chunk_size (int): The size of each chunk. Default is 512.
+        chunk_size (int): The size of each chunk. Default is 1500.
+        chunk_overlap (int): The overlap between chunks. Default is 100.
 
     Returns:
         Dict[str, Dict[str, str]]: A dictionary where keys are chunk IDs and values are dictionaries containing:
@@ -98,16 +101,21 @@ async def TextSplitter(file_contents: Dict[str, Dict[str, str]], chunk_size: int
     """
     metadata = {}
     
+    # Initialize RecursiveCharacterTextSplitter with chunk size and overlap
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
+    
     for file_name, file_metadata in file_contents.items():
         content = file_metadata['content']
-        words = content.split()
-        chunks = [" ".join(words[i : i + chunk_size]) for i in range(0, len(words), chunk_size)]
+
+        # Use RecursiveCharacterTextSplitter to split the content into chunks
+        docs = text_splitter.create_documents([content])
         
-        for i, chunk in enumerate(chunks):
+        # Iterate over each chunk and store metadata
+        for i, doc in enumerate(docs):
             chunk_id = f"{file_name}#chunk_{i}"
             metadata[chunk_id] = {
                 'ID': chunk_id,
-                'text': chunk,
+                'text': doc.page_content,  # The actual chunk of text
                 'creation_date': file_metadata['creation_date'],
                 'file_name': os.path.basename(file_metadata['file_path']),
                 'file_path': file_metadata['file_path'],

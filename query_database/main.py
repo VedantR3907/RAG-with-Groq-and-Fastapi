@@ -1,5 +1,5 @@
-from ast import List
 import sys
+from typing import List
 sys.path.append('../')
 from constants.constants import (GROQ_CLIENT_LLAMAINDEX, 
                        PINECONE_CLIENT, PINECONE_INDEX_NAME, PINECONE_NAMESPACE, 
@@ -44,7 +44,6 @@ async def llamaindex_chatbot(query: str, chat_history: List):
     #     response_synthesizer=response_synthesizer,
     #     node_postprocessors=postprocessors,
     # )
-
     chatengine = ContextChatEngine(
         retriever=vector_index_retriever,
         node_postprocessors=postprocessors,

@@ -4,7 +4,7 @@ import json
 import aiofiles
 import asyncio
 sys.path.append('../')
-from constants.constants import DIRECTORY_PATH, PINECONE_NAMESPACE, PINECONE_CLIENT, PINECONE_INDEX_NAME
+from constants.constants import DIRECTORY_PATH, PINECONE_NAMESPACE, PINECONE_CLIENT, PINECONE_INDEX_NAME, FILES_OUTPUT_DIR
 from text_and_embeddings.main import Generate_TextAndEmbeddings
 from pinecone import ServerlessSpec
 
@@ -25,11 +25,11 @@ async def upsert_data() -> None:
         namespace (str): The namespace for the Pinecone index.
     """
 
-    await Generate_TextAndEmbeddings(os.path.join(DIRECTORY_PATH, 'extracted_output'), json_path)
+    # await Generate_TextAndEmbeddings(os.path.join(DIRECTORY_PATH, 'extracted_output'), json_path)
 
     # Initialize Pinecone client
     if index_name not in pc.list_indexes().names():
-        await pc.create_index(
+        pc.create_index(
             name=index_name,
             dimension=384,
             metric="cosine",
@@ -43,7 +43,8 @@ async def upsert_data() -> None:
         print("INDEX ALREADY EXISTS")
     
     index = pc.Index(index_name)
-    
+    await Generate_TextAndEmbeddings(FILES_OUTPUT_DIR, json_path)
+
     # Asynchronously load the data from JSON
     async with aiofiles.open(json_path, 'r', encoding='utf-8') as file:
         data = json.loads(await file.read())

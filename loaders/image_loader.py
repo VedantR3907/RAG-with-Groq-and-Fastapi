@@ -1,6 +1,7 @@
 import os
 import sys
 import PIL.Image
+import asyncio
 import google.generativeai as genai
 sys.path.append('../')
 from constants.constants import GEMINI_API_KEY
@@ -38,8 +39,6 @@ async def generate_descriptions_for_images(input_directory, output_directory):
     try:
         # Generate descriptions for all images at once
         response = model.generate_content([prompt] + image_files)
-
-        print(response)
 
         # Ensure the output directory exists
         os.makedirs(output_directory, exist_ok=True)
@@ -93,3 +92,6 @@ async def main():
     input_directory = '../documents'
     output_directory = '../extracted_output'
     await generate_descriptions_for_images(input_directory, output_directory)
+
+
+asyncio.run(main())
