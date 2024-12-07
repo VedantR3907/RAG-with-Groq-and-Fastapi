@@ -88,10 +88,7 @@ async def generate_descriptions_for_images(input_directory, output_directory):
         print(f"An error occurred: {e}")
 
 # Example usage of the async function
-async def main():
-    input_directory = '../documents'
-    output_directory = '../extracted_output'
-    await generate_descriptions_for_images(input_directory, output_directory)
-
-
-asyncio.run(main())
+# async def main():
+#     input_directory = '../documents'
+#     output_directory = '../extracted_output'
+#     await generate_descriptions_for_images(input_directory, output_directory)

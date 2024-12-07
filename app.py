@@ -6,7 +6,7 @@ from typing import List, Tuple, IO
 from streamlit_extras.bottom_container import bottom
 from functions.save_data_to_json import save_to_json
 from functions.chat_history import display_chat_history, read_chat_history
-from streamlit_api_calls.main import response_from_model, loading_files, insert_documents_to_database, delete_documents_from_database, load_files_with_images
+from streamlit_api_calls.main import response_from_model, insert_documents_to_database, delete_documents_from_database, load_files_with_images
 from constants.constants import DIRECTORY_PATH
 
 extracted_output_folder = os.path.join(DIRECTORY_PATH, 'extracted_output')

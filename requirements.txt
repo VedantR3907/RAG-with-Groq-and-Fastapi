@@ -1,0 +1,15 @@
+streamlit
+streamlit-extras
+fastapi[standard]
+pinecone[grpc]
+llama-index-llms-
+langchain
+langchain-community
+aiofiles
+google-generativeai
+python-dotenv
+pymupdf
+llama-index-vector-stores-pinecone
+fastembed
+llama-index-embeddings-langchain
+asyncio

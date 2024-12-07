@@ -9,7 +9,7 @@ load_dotenv()
 PINECONE_CLIENT = Pinecone(api_key=os.environ.get("PINECONE_API_KEY"))
 PINECONE_INDEX_NAME = 'groqappchatbot'
 PINECONE_NAMESPACE = 'vedant'
-GROQ_CLIENT_LLAMAINDEX = Groq(model="llama-3.1-70b-versatile", api_key=os.environ.get("GROQ_API_KEY"),)
+GROQ_CLIENT_LLAMAINDEX = Groq(model="llama-3.3-70b-versatile", api_key=os.environ.get("GROQ_API_KEY"),)
 EMBEDDING_MODEL = FastEmbedEmbeddings()
 
 SIMILARITY_TOP_K = 10
