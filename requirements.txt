@@ -2,7 +2,7 @@ streamlit
 streamlit-extras
 fastapi[standard]
 pinecone[grpc]
-llama-index-llms-
+llama-index-llms-groq
 langchain
 langchain-community
 aiofiles
