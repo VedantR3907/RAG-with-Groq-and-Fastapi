@@ -13,3 +13,4 @@ llama-index-vector-stores-pinecone
 fastembed
 llama-index-embeddings-langchain
 asyncio
+llama-parse
